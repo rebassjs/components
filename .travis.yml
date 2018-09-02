@@ -1,6 +1,12 @@
 language: node_js
 node-js:
   - 10
+install:
+  - npm ci
+# keep the npm cache around to speed up installs
+cache:
+  directories:
+  - "$HOME/.npm"
 before-deploy:
   - npm install
   - npm run build
