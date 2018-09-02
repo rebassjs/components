@@ -1,0 +1,16 @@
+language: node_js
+node-js:
+  - 10
+before-deploy:
+  - npm install
+  - npm run build
+deploy:
+  repo: rebassjs/rebassjs.github.io
+  provider: pages
+  skip-cleanup: true
+  verbose: true
+  github-token: $GH_TOKEN
+  target-branch: master
+  local-dir: dist
+  on:
+    branch: master

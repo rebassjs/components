@@ -2,3 +2,4 @@
 src
 docs
 test.js
+.travis.yml
