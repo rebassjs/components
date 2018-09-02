@@ -4,21 +4,5 @@ node_js:
 install:
   - npm i -g npm@6
   - npm ci
-# # keep the npm cache around to speed up installs
-# cache:
-#   directories:
-#     - "$HOME/.npm"
-script: npm test -- --runInBand
-# before_deploy:
-#   - npm run build
-#   - touch dist/.nojekyll
-# deploy:
-#   repo: rebassjs/rebassjs.github.io
-#   provider: pages
-#   skip-cleanup: true
-#   verbose: true
-#   github-token: $GH_TOKEN
-#   target-branch: master
-#   local-dir: dist
-#   on:
-#     branch: master
+after_success:
+  - ./build-docs.js
