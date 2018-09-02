@@ -37,7 +37,7 @@ got.post(endpoint, {
     request: {
       // message: `Trigger build at ${repo} commit: ${gitCommitHash}`,
       message: `Trigger build at ${repo}`,
-      branch: 'source',
+      branch: 'src',
     },
   }),
 })
