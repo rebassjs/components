@@ -9,16 +9,16 @@ install:
 #   directories:
 #     - "$HOME/.npm"
 script: npm test -- --runInBand
-before_deploy:
-  - npm run build
-  - touch dist/.nojekyll
-deploy:
-  repo: rebassjs/rebassjs.github.io
-  provider: pages
-  skip-cleanup: true
-  verbose: true
-  github-token: $GH_TOKEN
-  target-branch: master
-  local-dir: dist
-  on:
-    branch: master
+# before_deploy:
+#   - npm run build
+#   - touch dist/.nojekyll
+# deploy:
+#   repo: rebassjs/rebassjs.github.io
+#   provider: pages
+#   skip-cleanup: true
+#   verbose: true
+#   github-token: $GH_TOKEN
+#   target-branch: master
+#   local-dir: dist
+#   on:
+#     branch: master
