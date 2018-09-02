@@ -6,7 +6,7 @@ install:
 # keep the npm cache around to speed up installs
 cache:
   directories:
-  - "$HOME/.npm"
+    - "$HOME/.npm"
 before-deploy:
   - npm install
   - npm run build
