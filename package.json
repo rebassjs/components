@@ -2,13 +2,15 @@
   "name": "@rebass/components",
   "version": "4.0.0-1",
   "description": "Create consistent styled-system based React UI components",
-  "main": "dist/styled",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "scripts": {
-    "styled:cjs": "NODE_ENV=styled:cjs babel src/index.js -o dist/styled.js",
-    "styled:esm": "NODE_ENV=styled:esm babel src/index.js -o dist/styled.mjs",
-    "emotion:cjs": "NODE_ENV=emotion:cjs babel src/index.js -o dist/emotion.js",
-    "emotion:esm": "NODE_ENV=emotion:esm babel src/index.js -o dist/emotion.mjs",
-    "prepare": "rm -rf dist && mkdir dist && npm run styled:cjs && npm run styled:esm && npm run emotion:cjs && npm run emotion:esm",
+    "clear": "rm -rf dist && mkdir dist",
+    "cjs": "NODE_ENV=cjs babel src -o dist/index.cjs.js",
+    "esm": "NODE_ENV=esm babel src -o dist/index.esm.js",
+    "emotion:cjs": "NODE_ENV=emotion:cjs babel src -o dist/emotion.cjs.js",
+    "emotion:esm": "NODE_ENV=emotion:esm babel src -o dist/emotion.esm.js",
+    "prepare": "npm run clear && npm run cjs && npm run esm && npm run emotion:cjs && npm run emotion:esm",
     "cover": "jest --coverage",
     "start": "mdx-go docs",
     "test": "jest"
@@ -27,11 +29,13 @@
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "styled-system": "^3.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
