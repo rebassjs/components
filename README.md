@@ -91,7 +91,7 @@ const Heading = system({
   is: 'h2',
   m: 0,
   fontSize: 6
-})
+}, 'space', 'fontSize')
 ```
 
 Since `is` is a prop, it can also be passed to the element when used.
