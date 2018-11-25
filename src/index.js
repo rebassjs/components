@@ -23,23 +23,17 @@ const propNames = styleKeys
   }, [])
 
 // private blacklist
-const _blacklist = [
-  'css',
-  'is',
-  'tag',
-  'extend',
-  ...propNames
-]
+const _blacklist = [ 'as', 'css', ...propNames ]
 
 const tag = React.forwardRef(({
   blacklist = [],
   ...props
 }, ref) => {
-  const Base = props.extend || props.tag || props.is || 'div'
+  const Base = props.as || 'div'
   const next = omit(props, typeof Base === 'string' ? [
     ..._blacklist,
     ...blacklist
-  ] : [ 'extend' ])
+  ] : [ 'as' ])
   return React.createElement(Base, { ...next, ref })
 })
 
@@ -56,7 +50,7 @@ const system = (props = {}, ...keysOrStyles) => {
 
   const Component = styled(tag)([], ...funcs, css)
 
-  const baseProps = util.get(props, 'extend.defaultProps') || {}
+  const baseProps = util.get(props, 'as.defaultProps') || {}
 
   Component.defaultProps = {
     ...baseProps,
