@@ -31,11 +31,10 @@ const _blacklist = [
   ...propNames
 ]
 
-const tag = React.forwardRef(({
+const tag = Base => React.forwardRef(({
   blacklist = [],
   ...props
 }, ref) => {
-  const Base = props.extend || props.tag || props.is || 'div'
   const next = omit(props, typeof Base === 'string' ? [
     ..._blacklist,
     ...blacklist
@@ -51,8 +50,11 @@ const getPropTypes = funcs => funcs
   }), {})
 
 const system = (props = {}, ...keysOrStyles) => {
-  const funcs = keysOrStyles.map(key => styles[key] || key)
-  const propTypes = getPropTypes(funcs)
+  const Base = props.extend || props.tag || props.is || 'div'
+  const funcs = []
+    .concat(keysOrStyles)
+    .map(key => styles[key] || key)
+    .concat(util.get(Base, 'componentStyle.rules'))
 
   const Component = styled(tag)([], ...funcs, css)
 
