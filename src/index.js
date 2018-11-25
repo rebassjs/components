@@ -13,51 +13,47 @@ const omit = (obj, blacklist) => {
   return next
 }
 
-const styleKeys = Object.keys(styles)
-  .filter(key => typeof styles[key] === 'function')
+const styleKeys = Object.keys(styles).filter(
+  key => typeof styles[key] === 'function'
+)
 
-const propNames = styleKeys
-  .reduce((a, key) => {
-    const names = Object.keys(styles[key].propTypes)
-    return [ ...a, ...names ]
-  }, [])
+const propNames = styleKeys.reduce((a, key) => {
+  const names = Object.keys(styles[key].propTypes)
+  return [...a, ...names]
+}, [])
 
 // private blacklist
-const _blacklist = [
-  'css',
-  'is',
-  'tag',
-  'extend',
-  ...propNames
-]
+const _blacklist = ['css', 'is', 'tag', 'extend', ...propNames]
 
-const tag = Base => React.forwardRef(({
-  blacklist = [],
-  ...props
-}, ref) => {
-  const next = omit(props, typeof Base === 'string' ? [
-    ..._blacklist,
-    ...blacklist
-  ] : [ 'extend' ])
+const base = props => props.extend || props.tag || props.is || 'div'
+
+const tag = React.forwardRef(({ blacklist = [], ...props }, ref) => {
+  const Base = base(props)
+  const next = omit(
+    props,
+    typeof Base === 'string' ? [..._blacklist, ...blacklist] : ['extend']
+  )
   return React.createElement(Base, { ...next, ref })
 })
 
-const getPropTypes = funcs => funcs
-  .filter(fn => typeof fn === 'function' && typeof fn.propTypes === 'object')
-  .reduce((a, fn) => ({
-    ...a,
-    ...fn.propTypes
-  }), {})
+const getPropTypes = funcs =>
+  funcs
+    .filter(fn => typeof fn === 'function' && typeof fn.propTypes === 'object')
+    .reduce(
+      (a, fn) => ({
+        ...a,
+        ...fn.propTypes
+      }),
+      {}
+    )
 
 const system = (props = {}, ...keysOrStyles) => {
-  const Base = props.extend || props.tag || props.is || 'div'
   const funcs = []
     .concat(keysOrStyles)
     .map(key => styles[key] || key)
-    .concat(util.get(Base, 'componentStyle.rules'))
+    .concat(util.get(base(props), 'componentStyle.rules'))
 
   const Component = styled(tag)([], ...funcs, css)
-
   const baseProps = util.get(props, 'extend.defaultProps') || {}
 
   Component.defaultProps = {
