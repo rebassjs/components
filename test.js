@@ -1,9 +1,9 @@
 import 'jest-styled-components'
-import styled, { css as scCSS, isStyledComponent } from 'styled-components'
+import { css as scCSS, isStyledComponent } from 'styled-components'
 import { space, color } from 'styled-system'
 import React from 'react'
 import { create as render } from 'react-test-renderer'
-import { isDOMComponent, isCompositeComponent } from 'react-dom/test-utils'
+import { isCompositeComponent } from 'react-dom/test-utils'
 import system from './src'
 
 
@@ -132,6 +132,27 @@ describe('@rebass/components', () => {
     expect(json).toHaveStyleRule('background-color', 'tomato')
   })
 
+  test('blacklist props are applied from both base and child components during extension', () => {
+    const basePropName = 'arbitraryBaseProp';
+    const childPropName = 'arbitraryChildProp';
+    const Box = system({
+      p: 2,
+      bg: 'tomato',
+      [basePropName]: 'test1',
+      blacklist: [basePropName]
+    }, 'space', 'color')
+    const ExtendedBox = system({
+      extend: Box,
+      bg: 'yellowgreen',
+      [childPropName]: 'test2',
+      blacklist: [childPropName] 
+    })
+    const json = render(<ExtendedBox />).toJSON()
+    expect(childPropName in json.props).toBe(false);
+    expect(basePropName in json.props).toBe(false);
+    expect(json).toHaveStyleRule('background-color', 'yellowgreen')
+  })
+
   test('accepts a css prop for custom styling', () => {
     const Box = system({})
     const json = render(<Box css='color:tomato;' />).toJSON()
@@ -149,7 +170,6 @@ describe('@rebass/components', () => {
   test('extends components with the `extend` prop and passes `is` prop to base component', () => {
     const Base = system({ p: 3 }, 'space')
     const Ext = system({ extend: Base }, 'color')
-    const base = render(<Base />).toJSON()
     const json = render(<Ext is='footer' p={3} bg='tomato' />).toJSON()
     expect(json.type).toBe('footer')
     expect(json).toHaveStyleRule('background-color', 'tomato')
