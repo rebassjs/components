@@ -19,27 +19,29 @@ const styleKeys = Object.keys(styles)
 const propNames = styleKeys
   .reduce((a, key) => {
     const names = Object.keys(styles[key].propTypes)
-    return [ ...a, ...names ]
+    return [...a, ...names]
   }, [])
 
-// private blacklist
 const _blacklist = [
   'css',
-  'is',
   'tag',
-  'extend',
-  ...propNames
-]
+  'extend'
+];
 
 const tag = React.forwardRef(({
   blacklist = [],
   ...props
 }, ref) => {
   const Base = props.extend || props.tag || props.is || 'div'
-  const next = omit(props, typeof Base === 'string' ? [
+
+  const baseBlacklist = typeof Base === 'string' ? [
+    'is',
     ..._blacklist,
-    ...blacklist
-  ] : [ 'extend' ])
+    ...propNames
+  ] : _blacklist
+
+  const next = omit(props, [...baseBlacklist, ...blacklist])
+
   return React.createElement(Base, { ...next, ref })
 })
 
@@ -52,7 +54,6 @@ const getPropTypes = funcs => funcs
 
 const system = (props = {}, ...keysOrStyles) => {
   const funcs = keysOrStyles.map(key => styles[key] || key)
-  const propTypes = getPropTypes(funcs)
 
   const Component = styled(tag)([], ...funcs, css)
 
