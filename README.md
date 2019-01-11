@@ -118,6 +118,19 @@ const Bold = system({
 }, 'fontWeight')
 ```
 
+### Blacklisting props
+
+It is a [known issue](https://github.com/styled-components/styled-components/issues/439) in `styled-components` that props applied to components will be added as attributes to the element in the DOM, resulting in console errors. To prevent this, `@rebass/components` offers an explicit `blacklist` property where you can specify which props should not be applied to the element.
+
+```js
+const Button = system({
+  is: 'button',
+  blacklist: ['isActive', 'isFoo'],
+})
+```
+
+If you `extend` another component that has its own blacklist, the two will be merged.
+
 ### CSS prop
 
 To add one-off custom CSS to any @rebass/component, use the `css` prop.
